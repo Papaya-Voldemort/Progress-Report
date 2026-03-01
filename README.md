@@ -1,51 +1,22 @@
-# Progress Report Studio
+# Progress Pulse
 
-A polished, minimal progress-tracking web app built with vanilla HTML, CSS, and JavaScript.
+A single-page front-end progress tracker rebuilt from scratch with polished motion, glassmorphism styling, and no backend dependency.
 
-## Features
+## Highlights
 
-- Create long-term projects/goals.
-- Add, rename, complete, and delete tasks.
-- Add, rename, complete, and delete subtasks.
-- Automatic percentage rollups:
-  - Subtask completion contributes to task completion.
-  - Task completion contributes to project completion.
-- Project notes with debounced autosave feedback.
-- Local persistence with defensive data sanitization.
-- Graceful fallback for corrupted storage.
-- Micro-animations and glassmorphism-inspired visual style.
-- Appwrite integration scaffold included as commented placeholder in `index.html`.
+- Animated overall and per-task progress bars.
+- Percentage counters that count up to target values.
+- Smooth single-open accordion behavior for task details/subtasks.
+- Three top-level modes:
+  - **View** (read-only)
+  - **Quick Update** (check items + percentage sliders)
+  - **Edit** (rename dashboard and task titles)
+- One-file static deploy (`index.html`, `style.css`, `script.js`).
 
-## Run
-
-Open `index.html` directly, or serve with any static file server:
+## Run locally
 
 ```bash
 python3 -m http.server 4173
 ```
 
-Then open <http://localhost:4173>.
-
-## Data model
-
-Stored in `localStorage` under `progress-report-studio-v1`.
-
-- `projects[]`
-  - `title`, `notes`, timestamps
-  - `tasks[]`
-    - `title`, `completed`, timestamps
-    - `subtasks[]`
-      - `title`, `completed`, timestamps
-
-## Edge-case handling
-
-- Empty values are rejected for names.
-- Input is normalized and length-limited.
-- Invalid persisted JSON is detected and safely reset.
-- Missing IDs/dates are regenerated/sanitized.
-- UI remains usable when no project or task exists.
-- Save failures in restrictive environments show user feedback.
-
-## Future Appwrite integration
-
-See commented section in `index.html` for a ready starting point to swap local persistence for Appwrite collections.
+Open <http://localhost:4173>.
