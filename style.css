@@ -1,6 +1,6 @@
 :root {
   color-scheme: dark;
-  font-family: 'Inter', 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: Inter, 'SF Pro Display', 'Segoe UI', sans-serif;
   --bg: #050712;
   --glass: rgba(238, 245, 255, 0.09);
   --glass-border: rgba(255, 255, 255, 0.28);

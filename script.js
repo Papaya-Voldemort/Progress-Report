@@ -46,6 +46,15 @@ const state = {
 
 const app = document.getElementById('app');
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function animateCount(el, target, duration = 1200) {
   const start = performance.now();
   const from = Number(el.dataset.value || 0);
@@ -64,6 +73,7 @@ function animateCount(el, target, duration = 1200) {
 }
 
 function calcOverallProgress() {
+  if (!state.tasks || state.tasks.length === 0) return 0;
   const total = state.tasks.reduce((sum, task) => sum + task.progress, 0);
   return Math.round(total / state.tasks.length);
 }
@@ -76,16 +86,18 @@ function render() {
       <div>
         ${
           state.mode === 'Edit'
-            ? `<input id="titleInput" class="title-input" value="${state.title}" />`
-            : `<h1>${state.title}</h1>`
+            ? `<input id="titleInput" class="title-input" value="${escapeHtml(state.title)}" />`
+            : `<h1>${escapeHtml(state.title)}</h1>`
         }
         <p>Animated project pulse with strict single-open task drilldown.</p>
       </div>
-      <div class="mode-toggle" role="tablist" aria-label="Display mode">
+      <div class="mode-toggle" role="group" aria-label="Display mode">
         ${modes
           .map(
             (mode) =>
-              `<button class="${mode === state.mode ? 'active' : ''}" data-mode="${mode}">${mode}</button>`
+              `<button type="button" aria-pressed="${mode === state.mode ? 'true' : 'false'}" class="${
+                mode === state.mode ? 'active' : ''
+              }" data-mode="${mode}">${escapeHtml(mode)}</button>`
           )
           .join('')}
       </div>
@@ -96,7 +108,7 @@ function render() {
         <span>Overall Completion</span>
         <strong id="overallCount" data-value="0">0%</strong>
       </div>
-      <div class="overall-track" aria-hidden>
+      <div class="overall-track" aria-hidden="true">
         <div class="overall-fill" style="width:${overall}%"></div>
       </div>
     </section>
@@ -106,15 +118,15 @@ function render() {
         .map((task, idx) => {
           const open = state.openId === task.id;
           return `
-            <article class="task-card ${open ? 'open' : ''}" data-id="${task.id}">
-              <button class="task-head" data-toggle="${task.id}" aria-expanded="${open}">
+            <article class="task-card ${open ? 'open' : ''}" data-id="${escapeHtml(task.id)}">
+              <button type="button" class="task-head" data-toggle="${escapeHtml(task.id)}" aria-expanded="${open}">
                 <div class="task-main">
                   ${
                     state.mode === 'Edit'
-                      ? `<input class="inline-edit" data-name="${task.id}" value="${task.name}" />`
-                      : `<h2>${task.name}</h2>`
+                      ? `<input class="inline-edit" data-name="${escapeHtml(task.id)}" value="${escapeHtml(task.name)}" />`
+                      : `<h2>${escapeHtml(task.name)}</h2>`
                   }
-                  <p>${task.notes}</p>
+                  <p>${escapeHtml(task.notes)}</p>
                 </div>
                 <div class="task-stats">
                   <span class="count" data-target="${task.progress}" data-duration="${1200 + idx * 180}">0%</span>
@@ -122,7 +134,7 @@ function render() {
                 </div>
               </button>
 
-              <div class="task-progress-track" aria-hidden>
+              <div class="task-progress-track" aria-hidden="true">
                 <div class="task-progress-fill" style="width:${task.progress}%"></div>
               </div>
 
@@ -133,10 +145,10 @@ function render() {
                       (item) => `
                     <li>
                       <label>
-                        <input type="checkbox" data-check="${task.id}:${item.id}" ${item.done ? 'checked' : ''} ${
-                        state.mode === 'View' ? 'disabled' : ''
-                      } />
-                        <span>${item.title}</span>
+                        <input type="checkbox" data-check="${escapeHtml(task.id)}:${escapeHtml(item.id)}" ${
+                        item.done ? 'checked' : ''
+                      } ${state.mode === 'View' ? 'disabled' : ''} />
+                        <span>${escapeHtml(item.title)}</span>
                       </label>
                     </li>`
                     )
@@ -146,7 +158,7 @@ function render() {
                 ${
                   state.mode === 'Quick Update' || state.mode === 'Edit'
                     ? `<label class="range-wrap">Progress override
-                        <input type="range" min="0" max="100" value="${task.progress}" data-progress="${task.id}" />
+                        <input type="range" min="0" max="100" value="${task.progress}" data-progress="${escapeHtml(task.id)}" />
                       </label>`
                     : ''
                 }
@@ -189,6 +201,12 @@ function bindEvents() {
   }
 
   document.querySelectorAll('[data-name]').forEach((input) => {
+    ['click', 'mousedown', 'pointerdown', 'keydown', 'focus'].forEach((eventName) => {
+      input.addEventListener(eventName, (event) => {
+        event.stopPropagation();
+      });
+    });
+
     input.addEventListener('input', (event) => {
       const task = state.tasks.find((entry) => entry.id === input.dataset.name);
       if (!task) return;

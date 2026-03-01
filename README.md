@@ -11,7 +11,7 @@ A single-page front-end progress tracker rebuilt from scratch with polished moti
   - **View** (read-only)
   - **Quick Update** (check items + percentage sliders)
   - **Edit** (rename dashboard and task titles)
-- One-file static deploy (`index.html`, `style.css`, `script.js`).
+- Three-file static deploy (`index.html`, `style.css`, `script.js`).
 
 ## Run locally
 
