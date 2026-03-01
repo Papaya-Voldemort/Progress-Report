@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Progress Report Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="background" aria-hidden="true"></div>
+    <div class="page-shell" id="app-shell">
+      <header class="hero glass reveal">
+        <div>
+          <p class="eyebrow">Progress Report Studio</p>
+          <h1>Build momentum with clear, beautiful project tracking.</h1>
+          <p class="subtitle">
+            Add long-term goals, create tasks and subtasks, update completion,
+            and keep notes in one polished workspace.
+          </p>
+        </div>
+        <div class="hero-stats" id="hero-stats" aria-live="polite"></div>
+      </header>
+
+      <main class="layout reveal" id="app-main">
+        <section class="panel glass" aria-labelledby="projects-heading">
+          <div class="panel-header">
+            <h2 id="projects-heading">Projects</h2>
+            <button id="add-project-btn" class="button primary">New Project</button>
+          </div>
+          <p class="helper-text">
+            Each project is a long-term goal. Completion updates automatically
+            from tasks and subtasks.
+          </p>
+          <div id="project-feedback" class="feedback" aria-live="polite"></div>
+          <ul id="project-list" class="project-list" aria-label="Project list"></ul>
+        </section>
+
+        <section class="panel glass details" aria-labelledby="details-heading">
+          <div id="empty-details" class="empty-state">
+            <h2 id="details-heading">No project selected</h2>
+            <p>Select a project to manage tasks, subtasks, and notes.</p>
+          </div>
+
+          <div id="project-details" class="hidden" aria-live="polite">
+            <div class="details-header">
+              <div>
+                <p class="eyebrow">Project Details</p>
+                <h2 id="detail-project-name"></h2>
+              </div>
+              <div class="details-actions">
+                <button id="rename-project-btn" class="button ghost">Rename</button>
+                <button id="delete-project-btn" class="button danger">Delete</button>
+              </div>
+            </div>
+
+            <div class="detail-grid">
+              <article class="card subtle">
+                <h3>Progress</h3>
+                <div id="detail-progress" class="metric"></div>
+                <div class="progress-track"><span id="detail-progress-fill"></span></div>
+              </article>
+
+              <article class="card subtle">
+                <h3>Project Notes</h3>
+                <textarea
+                  id="project-notes"
+                  rows="5"
+                  placeholder="Capture context, blockers, decisions, and updates..."
+                ></textarea>
+                <div class="inline-status" id="note-status" aria-live="polite"></div>
+              </article>
+            </div>
+
+            <article class="card">
+              <div class="panel-header compact">
+                <h3>Tasks</h3>
+                <button id="add-task-btn" class="button primary small">Add Task</button>
+              </div>
+              <p class="helper-text">Break your goal into measurable work items.</p>
+              <div id="task-feedback" class="feedback" aria-live="polite"></div>
+              <ul id="task-list" class="task-list"></ul>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="project-item-template">
+      <li class="project-item">
+        <button class="project-select" type="button">
+          <div class="project-item-head">
+            <strong class="project-title"></strong>
+            <span class="project-percent"></span>
+          </div>
+          <div class="progress-track"><span class="progress-fill"></span></div>
+          <p class="project-meta"></p>
+        </button>
+      </li>
+    </template>
+
+    <template id="task-item-template">
+      <li class="task-item">
+        <div class="task-top">
+          <label class="checkbox-row">
+            <input class="task-toggle" type="checkbox" />
+            <span class="task-name"></span>
+          </label>
+          <div class="task-actions">
+            <button class="icon-btn add-subtask" title="Add subtask" aria-label="Add subtask">+</button>
+            <button class="icon-btn rename-task" title="Rename task" aria-label="Rename task">✎</button>
+            <button class="icon-btn delete-task" title="Delete task" aria-label="Delete task">🗑</button>
+          </div>
+        </div>
+        <p class="task-percent"></p>
+        <ul class="subtask-list"></ul>
+      </li>
+    </template>
+
+    <!--
+      Appwrite integration placeholder (commented until backend is configured):
+
+      <script src="https://cdn.jsdelivr.net/npm/appwrite@16.0.2"></script>
+      <script>
+        // const client = new Appwrite.Client()
+        //   .setEndpoint('https://<YOUR_APPWRITE_ENDPOINT>/v1')
+        //   .setProject('<YOUR_PROJECT_ID>');
+        // const databases = new Appwrite.Databases(client);
+        // Future: persist projects/tasks in Appwrite collections.
+      </script>
+    -->
+
+    <script src="script.js"></script>
+  </body>
+</html>
